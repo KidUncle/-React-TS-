@@ -1,0 +1,5 @@
+export * from './home'
+export * from './singIn'
+export * from './register'
+export * from './404'
+export * from './detail'
