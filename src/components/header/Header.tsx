@@ -3,23 +3,30 @@ import styles from "./header.module.css";
 import { Layout, Typography, Input, Menu, Button, Dropdown } from "antd";
 import { GlobalOutlined } from "@ant-design/icons";
 import logo from "../../assets/logo/logo.svg";
+import { useHistory } from "react-router-dom";
+import { useSelector } from '../../redux/hooks'
+import { useDispatch } from "react-redux";
 import {
-  useHistory,
-  useLocation,
-  useParams,
-  useRouteMatch,
-} from "react-router-dom";
+  addLanguageActionCreator,
+  changeLanguageActionCreator,
+} from "../../redux/language/languageActions";
+import { useTranslation } from 'react-i18next'
 
 export const Header: React.FC = () => {
   const history = useHistory();
-  const location = useLocation();
-  const params = useParams();
-  const match = useRouteMatch();
+  const language = useSelector((state) => state.language)
+  const languageList = useSelector((state) => state.languageList)
+  const dispatch = useDispatch();
+  const { t } = useTranslation();
 
-  console.log("history", history);
-  console.log("location", location);
-  console.log("params", params);
-  console.log("match", match);
+  const menuClickHandler = (e: any) => {
+    if (e.key === "new") {
+      dispatch(addLanguageActionCreator('新语言', 'new_lang'))
+    } else {
+      dispatch(changeLanguageActionCreator(e.key))
+    }
+  };
+
   return (
     <div className={styles["app-header"]}>
       {/* top-header */}
@@ -27,17 +34,21 @@ export const Header: React.FC = () => {
         <div className={styles.inner}>
           <Typography.Text>让旅游更幸福</Typography.Text>
           <Dropdown.Button
-            style={{ marginLeft: 15 }}
-            overlay={
-              <Menu>
-                <Menu.Item>中文</Menu.Item>
-                <Menu.Item>English</Menu.Item>
-              </Menu>
-            }
-            icon={<GlobalOutlined />}
-          >
-            语言
-          </Dropdown.Button>
+              style={{ marginLeft: 15 }}
+              overlay={
+                <Menu onClick={menuClickHandler}>
+                  {languageList.map((l) => {
+                    return <Menu.Item key={l.code}>{l.name}</Menu.Item>;
+                  })}
+                  <Menu.Item key={"new"}>
+                    {t("header.add_new_language")}
+                  </Menu.Item>
+                </Menu>
+              }
+              icon={<GlobalOutlined />}
+            >
+              {language === "zh" ? "中文" : "English"}
+            </Dropdown.Button>
           <Button.Group className={styles["button-group"]}>
             <Button onClick={() => history.push("register")}>注册</Button>
             <Button onClick={() => history.push("signIn")}>登陆</Button>
@@ -45,7 +56,7 @@ export const Header: React.FC = () => {
         </div>
       </div>
       <Layout.Header className={styles["main-header"]}>
-        <span onClick={() => history.push('/')}>
+        <span onClick={() => history.push("/")}>
           <img src={logo} alt="logo" className={styles["App-logo"]} />
           <Typography.Title level={3} className={styles.title}>
             React旅游网
