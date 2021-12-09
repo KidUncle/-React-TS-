@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # -React-TS-
 技术栈：React17+TypeScript+Redux
 主要功能：
@@ -6,7 +6,7 @@
   2. 网站登陆
   3. 购物车结算
   4. 下单购买
-=======
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
